@@ -4,7 +4,7 @@ from .base import env
 # GENERAL
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#debug
-DEBUG = True
+DEBUG = env.bool("DEBUG", True)
 # https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 SECRET_KEY = env(
     "DJANGO_SECRET_KEY",
@@ -47,6 +47,11 @@ EMAIL_BACKEND = env("DJANGO_EMAIL_BACKEND", default="django.core.mail.backends.c
 # http://whitenoise.evans.io/en/latest/django.html#using-whitenoise-in-development
 INSTALLED_APPS = ["whitenoise.runserver_nostatic"] + INSTALLED_APPS  # noqa: F405
 {% endif %}
+
+# django-dump-die
+# ------------------------------------------------------------------------------
+INSTALLED_APPS += ["django_dump_die"]  # noqa: F405
+MIDDLEWARE += ["django_dump_die.middleware.DumpAndDieMiddleware"]  # noqa: F405
 
 # django-debug-toolbar
 # ------------------------------------------------------------------------------

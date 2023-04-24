@@ -49,3 +49,25 @@ drf-spectacular==0.26.2  # https://github.com/tfranzel/drf-spectacular
 {%- if cookiecutter.frontend_pipeline == 'Webpack' %}
 django-webpack-loader==1.8.1  # https://github.com/django-webpack/django-webpack-loader
 {%- endif %}
+
+# Auth
+django-guardian==2.4.0 # https://github.com/django-guardian/django-guardian
+django-oauth-toolkit==2.2.0 # https://github.com/jazzband/django-oauth-toolkit
+djangorestframework-simplejwt==5.2.2 # https://github.com/jazzband/djangorestframework-simplejwt
+
+# REST
+djangorestframework-gis==1.0 # https://github.com/openwisp/django-rest-framework-gis
+drf-extensions==0.7.1 # https://github.com/chibisov/drf-extensions
+drf-writable-nested==0.1.0 # https://github.com/beda-software/drf-writable-nested
+# dynamic-rest==2.1.2 # https://github.com/AltSchool/dynamic-rest
+django-filter==22.1 # https://github.com/carltongibson/django-filter
+
+# Utils
+pydash==6.0.2 # https://github.com/dgilland/pydash
+pendulum==2.1.2 # https://github.com/sdispater/pendulum
+
+# Production
+invoke==2.0.0 # https://github.com/pyinvoke/invoke
+
+# Admin
+django-admin-interface==0.24.2 # https://github.com/fabiocaccamo/django-admin-interface

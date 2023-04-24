@@ -4,7 +4,7 @@ SITE_HEADER="{{ cookiecutter.project_name }} Admin"
 SITE_TITLE="{{ cookiecutter.project_name }} Admin Site"
 INDEX_TITLE="{{ cookiecutter.project_name }} Admin"
 
-DJANGO_DEBUG=True
+DEBUG=False
 DJANGO_SUPERUSER_USERNAME=admin
 DJANGO_SUPERUSER_EMAIL=admin@admin.com
 DJANGO_SUPERUSER_PASSWORD=admin

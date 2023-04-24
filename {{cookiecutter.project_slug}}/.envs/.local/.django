@@ -4,7 +4,7 @@ SITE_HEADER="{{ cookiecutter.project_name }} Admin"
 SITE_TITLE="{{ cookiecutter.project_name }} Admin Site"
 INDEX_TITLE="{{ cookiecutter.project_name }} Admin"
 
-DJANGO_DEBUG=True
+DEBUG=True
 DJANGO_SUPERUSER_USERNAME=admin
 DJANGO_SUPERUSER_EMAIL=admin@admin.com
 DJANGO_SUPERUSER_PASSWORD=admin
@@ -17,6 +17,9 @@ INVOKE_LOG_STDOUT=True
 
 USE_DOCKER=yes
 IPYTHONDIR=/app/.ipython
+
+# DJANGO_READ_DOT_ENV_FILE=True
+DJANGO_ADMIN_URL=djadmin/
 
 # Django OAuth Toolkit
 # ------------------------------------------------------------------------------
