@@ -42,3 +42,7 @@ django-anymail[sparkpost]==9.1  # https://github.com/anymail/django-anymail
 {%- elif cookiecutter.mail_service == 'Other SMTP' %}
 django-anymail==9.1  # https://github.com/anymail/django-anymail
 {%- endif %}
+
+# Utils
+django-dump-die==0.1.5 # https://github.com/djbarnes/django-dump-die
+colorama==0.4.6 # https://github.com/tartley/colorama

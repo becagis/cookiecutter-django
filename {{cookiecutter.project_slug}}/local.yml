@@ -4,12 +4,31 @@ volumes:
   {{ cookiecutter.project_slug }}_local_postgres_data: {}
   {{ cookiecutter.project_slug }}_local_postgres_data_backups: {}
 
+x-common-django:
+  &default-common-django
+  build:
+    context: .
+    dockerfile: ./compose/local/django/Dockerfile
+  image: ttungbmt/{{ cookiecutter.project_slug }}_local_django:${APP_VERSION}
+  depends_on:
+    - postgres
+    {%- if cookiecutter.use_celery == 'y' %}
+    - redis
+    {%- endif %}
+    {%- if cookiecutter.use_mailhog == 'y' %}
+    - mailhog
+    {%- endif %}
+  volumes:
+    - .:/app:z
+  env_file:
+    - ./.envs/.local/.django
+    - ./.envs/.local/.postgres
+  environment:
+    - IS_CELERY=False
+
 services:
-  django:{% if cookiecutter.use_celery == 'y' %} &django{% endif %}
-    build:
-      context: .
-      dockerfile: ./compose/local/django/Dockerfile
-    image: {{ cookiecutter.project_slug }}_local_django
+  django:
+    <<: *default-common-django
     container_name: {{ cookiecutter.project_slug }}_local_django
     depends_on:
       - postgres
@@ -19,20 +38,15 @@ services:
       {%- if cookiecutter.use_mailhog == 'y' %}
       - mailhog
       {%- endif %}
-    volumes:
-      - .:/app:z
-    env_file:
-      - ./.envs/.local/.django
-      - ./.envs/.local/.postgres
     ports:
-      - '8000:8000'
+      - '${DJANGO_PORT:-8000}:8000'
     command: /start
 
   postgres:
     build:
       context: .
       dockerfile: ./compose/production/postgres/Dockerfile
-    image: {{ cookiecutter.project_slug }}_production_postgres
+    image: ttungbmt/{{ cookiecutter.project_slug }}_production_postgres
     container_name: {{ cookiecutter.project_slug }}_local_postgres
     volumes:
       - {{ cookiecutter.project_slug }}_local_postgres_data:/var/lib/postgresql/data
@@ -41,7 +55,7 @@ services:
       - ./.envs/.local/.postgres
 
   docs:
-    image: {{ cookiecutter.project_slug }}_local_docs
+    image: ttungbmt/{{ cookiecutter.project_slug }}_local_docs
     container_name: {{ cookiecutter.project_slug }}_local_docs
     build:
       context: .
@@ -61,7 +75,7 @@ services:
     image: mailhog/mailhog:v1.0.0
     container_name: {{ cookiecutter.project_slug }}_local_mailhog
     ports:
-      - "8025:8025"
+      - "${MAILHOG_PORT:-8025}:8025"
 
   {%- endif %}
   {%- if cookiecutter.use_celery == 'y' %}
@@ -71,37 +85,22 @@ services:
     container_name: {{ cookiecutter.project_slug }}_local_redis
 
   celeryworker:
-    <<: *django
-    image: {{ cookiecutter.project_slug }}_local_celeryworker
+    <<: *default-common-django
     container_name: {{ cookiecutter.project_slug }}_local_celeryworker
-    depends_on:
-      - redis
-      - postgres
-      {%- if cookiecutter.use_mailhog == 'y' %}
-      - mailhog
-      {%- endif %}
     ports: []
     command: /start-celeryworker
 
   celerybeat:
-    <<: *django
-    image: {{ cookiecutter.project_slug }}_local_celerybeat
+    <<: *default-common-django
     container_name: {{ cookiecutter.project_slug }}_local_celerybeat
-    depends_on:
-      - redis
-      - postgres
-      {%- if cookiecutter.use_mailhog == 'y' %}
-      - mailhog
-      {%- endif %}
     ports: []
     command: /start-celerybeat
 
   flower:
-    <<: *django
-    image: {{ cookiecutter.project_slug }}_local_flower
+    <<: *default-common-django
     container_name: {{ cookiecutter.project_slug }}_local_flower
     ports:
-      - '5555:5555'
+      - '${FLOWER_PORT:-5555}:5555'
     command: /start-flower
 
   {%- endif %}
@@ -111,7 +110,7 @@ services:
     build:
       context: .
       dockerfile: ./compose/local/node/Dockerfile
-    image: {{ cookiecutter.project_slug }}_local_node
+    image: ttungbmt/{{ cookiecutter.project_slug }}_local_node
     container_name: {{ cookiecutter.project_slug }}_local_node
     depends_on:
       - django
@@ -121,10 +120,10 @@ services:
       - /app/node_modules
     command: npm run dev
     ports:
-      - '3000:3000'
+      - '${NODE_PORT:-3000}:3000'
       {%- if cookiecutter.frontend_pipeline == 'Gulp' %}
       # Expose browsersync UI: https://www.browsersync.io/docs/options/#option-ui
-      - '3001:3001'
+      - '${BROWERSYNC_PORT:-3001}:3001'
       {%- endif %}
 
   {%- endif %}

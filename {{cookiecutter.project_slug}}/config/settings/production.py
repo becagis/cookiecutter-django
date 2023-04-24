@@ -370,3 +370,4 @@ SPECTACULAR_SETTINGS["SERVERS"] = [  # noqa: F405
 {%- endif %}
 # Your stuff...
 # ------------------------------------------------------------------------------
+SECURE_CROSS_ORIGIN_OPENER_POLICY=None

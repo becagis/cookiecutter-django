@@ -1,6 +1,10 @@
 log:
   level: INFO
 
+api:
+  dashboard: true
+  insecure: true
+
 entryPoints:
   web:
     # http
